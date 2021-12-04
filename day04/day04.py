@@ -1,8 +1,5 @@
 import os
 
-with open(os.path.join(os.path.dirname(__file__), 'input.txt')) as file:
-  data = file.read().strip().split("\n\n")
-
 class Board:
   def __init__(self, board):
     lines = [[int(x) for x in line.split()] for line in board.splitlines()]
@@ -27,23 +24,15 @@ class Board:
         any(col <= self._marked_numbers for col in self._cols)):
       self._score = sum(sum(row - self._marked_numbers) for row in self._rows) * number
 
-def setup_game():
+def read_input():
+  with open(os.path.join(os.path.dirname(__file__), 'input.txt')) as file:
+    data = file.read().strip().split("\n\n")
   numbers = [int(x) for x in data[0].split(',')]
   boards = [Board(grid) for grid in data[1:]]
   return numbers, boards
 
-def part_one():
-  numbers, boards = setup_game()
-  for number in numbers:
-    for board in boards:
-      if board.has_won:
-        continue
-      board.update(number)
-      if board.has_won:
-        return board.score
-
-def part_two():
-  numbers, boards = setup_game()
+def play_game():
+  numbers, boards = read_input()
   scores = []
   for number in numbers:
     for board in boards:
@@ -52,9 +41,10 @@ def part_two():
       board.update(number)
       if board.has_won:
         scores.append(board.score)
-        if len(scores) == len(boards):
-          return scores[-1]
+    if len(scores) == len(boards):
+      return scores
 
 if __name__ == "__main__":
-  print('Part One: %d' % part_one())
-  print('Part Two: %d' % part_two())
+  scores = play_game()
+  print('Part One: %d' % scores[0])
+  print('Part Two: %d' % scores[-1])
