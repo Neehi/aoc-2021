@@ -12,14 +12,31 @@ for board in data[1:]:
   cols = [set(line) for line in zip(*lines)]
   boards.append({'rows': rows, 'cols': cols})
 
+def is_winner(board, drawn):
+  return (any(row <= drawn for row in board['rows']) or
+          any(col <= drawn for col in board['cols']))
+
 def part_one():
   drawn = set()
   for number in numbers:
     drawn.add(number)
     for board in boards:
-      if (any(row <= drawn for row in board['rows']) or
-          any(col <= drawn for col in board['cols'])):
+      if is_winner(board, drawn):
         return sum(sum(row - drawn) for row in board['rows']) * number
+
+def part_two():
+  drawn = set()
+  winners = set()
+  for number in numbers:
+    drawn.add(number)
+    for idx, board in enumerate(boards):
+      if idx in winners:
+        continue
+      if is_winner(board, drawn):
+        winners.add(idx)
+        if len(winners) == len(boards):
+          return sum(sum(row - drawn) for row in board['rows']) * number
 
 if __name__ == "__main__":
   print('Part One: %d' % part_one())
+  print('Part Two: %d' % part_two())
