@@ -3,39 +3,57 @@ import os
 with open(os.path.join(os.path.dirname(__file__), 'input.txt')) as file:
   data = file.read().strip().split("\n\n")
 
-numbers = [int(x) for x in data[0].split(',')]
+class Board:
+  def __init__(self, board):
+    lines = [[int(x) for x in line.split()] for line in board.splitlines()]
+    self._rows = [set(line) for line in lines]
+    self._cols = [set(line) for line in zip(*lines)]
+    self._marked_numbers = set()
+    self._score = None
 
-boards = []
-for board in data[1:]:
-  lines = [[int(x) for x in line.split()] for line in board.splitlines()]
-  rows = [set(line) for line in lines]
-  cols = [set(line) for line in zip(*lines)]
-  boards.append({'rows': rows, 'cols': cols})
+  @property
+  def has_won(self):
+    return self._score is not None
 
-def is_winner(board, drawn):
-  return (any(row <= drawn for row in board['rows']) or
-          any(col <= drawn for col in board['cols']))
+  @property
+  def score(self):
+    return self._score
+
+  def update(self, number):
+    if self._score:
+      return
+    self._marked_numbers.add(number)
+    if (any(row <= self._marked_numbers for row in self._rows) or
+        any(col <= self._marked_numbers for col in self._cols)):
+      self._score = sum(sum(row - self._marked_numbers) for row in self._rows) * number
+
+def setup_game():
+  numbers = [int(x) for x in data[0].split(',')]
+  boards = [Board(grid) for grid in data[1:]]
+  return numbers, boards
 
 def part_one():
-  drawn = set()
+  numbers, boards = setup_game()
   for number in numbers:
-    drawn.add(number)
     for board in boards:
-      if is_winner(board, drawn):
-        return sum(sum(row - drawn) for row in board['rows']) * number
+      if board.has_won:
+        continue
+      board.update(number)
+      if board.has_won:
+        return board.score
 
 def part_two():
-  drawn = set()
-  winners = set()
+  numbers, boards = setup_game()
+  scores = []
   for number in numbers:
-    drawn.add(number)
-    for idx, board in enumerate(boards):
-      if idx in winners:
+    for board in boards:
+      if board.has_won:
         continue
-      if is_winner(board, drawn):
-        winners.add(idx)
-        if len(winners) == len(boards):
-          return sum(sum(row - drawn) for row in board['rows']) * number
+      board.update(number)
+      if board.has_won:
+        scores.append(board.score)
+        if len(scores) == len(boards):
+          return scores[-1]
 
 if __name__ == "__main__":
   print('Part One: %d' % part_one())
