@@ -44,7 +44,6 @@ def play_game():
     if len(scores) == len(boards):
       return scores
 
-if __name__ == "__main__":
-  scores = play_game()
-  print('Part One: %d' % scores[0])
-  print('Part Two: %d' % scores[-1])
+scores = play_game()
+print('Part One: %d' % scores[0])
+print('Part Two: %d' % scores[-1])

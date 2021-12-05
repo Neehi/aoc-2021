@@ -25,6 +25,5 @@ def part_two():
   co2_scrubber_rating = _find_rating(report, False)  # lcv
   return oxygen_generator_rating * co2_scrubber_rating
 
-if __name__ == "__main__":
-  print('Part One: %d' % part_one())
-  print('Part Two: %d' % part_two())
+print('Part One: %d' % part_one())
+print('Part Two: %d' % part_two())

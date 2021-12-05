@@ -12,6 +12,5 @@ def part_one():
 def part_two():
   return count_increases([sum(three_nums) for three_nums in zip(measurements, measurements[1:], measurements[2:])])
 
-if __name__ == "__main__":
-  print('Part One: %d' % part_one())
-  print('Part Two: %d' % part_two())
+print('Part One: %d' % part_one())
+print('Part Two: %d' % part_two())

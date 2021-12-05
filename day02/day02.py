@@ -28,6 +28,5 @@ def part_two():
     y += step[0] * aim
   return x * y
 
-if __name__ == "__main__":
-  print('Part One: %d' % part_one())
-  print('Part Two: %d' % part_two())
+print('Part One: %d' % part_one())
+print('Part Two: %d' % part_two())
