@@ -14,10 +14,9 @@ def find_paths(start, visited=set(), revisit_small=False):
   if start == "end":
     return 1
   return sum(
-    find_paths(next, visited | {start}, revisit_small) if next not in visited or next == next.upper()
-    else find_paths(next, visited | {start}, False) if revisit_small and next != "start"
-    else 0
+    find_paths(next, visited | {start}, revisit_small and (next not in visited or next.isupper()))
     for next in caves[start]
+    if next not in visited or next.isupper() or revisit_small and next != "start"
   )
 
 print('Part One: %d' % find_paths("start"))
