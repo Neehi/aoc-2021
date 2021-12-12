@@ -10,9 +10,15 @@ for line in data:
   caves[a].append(b)
   caves[b].append(a)
 
-def find_paths(start, visited=set()):
+def find_paths(start, visited=set(), revisit_small=False):
   if start == "end":
     return 1
-  return sum(find_paths(next, visited | {start}) for next in caves[start] if next not in visited or next == next.upper())
+  return sum(
+    find_paths(next, visited | {start}, revisit_small) if next not in visited or next == next.upper()
+    else find_paths(next, visited | {start}, False) if revisit_small and next != "start"
+    else 0
+    for next in caves[start]
+  )
 
 print('Part One: %d' % find_paths("start"))
+print('Part Two: %d' % find_paths("start", revisit_small=True))
