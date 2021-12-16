@@ -3,9 +3,14 @@ import os
 with open(os.path.join(os.path.dirname(__file__), 'input.txt')) as file:
   data = file.read().strip()
 
-grid = [list(map(int, line)) for line in data.split('\n')]
+data = [list(map(int, line)) for line in data.split('\n')]
 
-def bfs(grid):
+def bfs(tile_size=1):
+  grid = [
+    [(data[y][x] + tx + ty - 1) % 9 + 1 for tx in range(tile_size) for x in range(len(data[0]))]
+    for ty in range(tile_size) for y in range(len(data))
+  ]
+
   costs = [[float("inf")] * len(grid[0]) for _ in range(len(grid))]
   costs[0][0] = 0
 
@@ -21,4 +26,5 @@ def bfs(grid):
 
   return costs[-1][-1]
 
-print('Part One: %d' % bfs(grid))
+print('Part One: %d' % bfs(1))
+print('Part Two: %d' % bfs(5))
