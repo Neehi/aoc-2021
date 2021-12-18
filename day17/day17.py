@@ -16,4 +16,20 @@ def part_one():
   #   n * (n + 1) / 2, where n = abs(y_min) + 1
   return (y_min + 1) * y_min // 2  # Assumes y_min is negative
 
+def part_two():
+  n = 0
+  for vx in range(x_max + 1):
+    for vy in range(-abs(y_min), abs(y_min)):
+      x, y, dx, dy = 0, 0, vx, vy
+      while x <= x_max and y > y_min:
+        x += dx
+        y += dy
+        if x_min <= x <= x_max and y_min <= y <= y_max:
+          n += 1
+          break
+        dx = max(0, dx - 1)
+        dy -= 1
+  return n
+
 print('Part One: %d' % part_one())
+print('Part Two: %d' % part_two())
